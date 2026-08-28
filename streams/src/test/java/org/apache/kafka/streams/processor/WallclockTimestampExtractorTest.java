@@ -17,12 +17,8 @@
 package org.apache.kafka.streams.processor;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.header.internals.RecordHeaders;
-import org.apache.kafka.common.record.TimestampType;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,23 +29,7 @@ public class WallclockTimestampExtractorTest {
         final TimestampExtractor extractor = new WallclockTimestampExtractor();
 
         final long before = System.currentTimeMillis();
-        final long recordTimestamp = 41;
-        final long partitionTime = 42;
-        // The extractor should ignore the input timestamps and return the current wall-clock time.
-        final long timestamp = extractor.extract(
-            new ConsumerRecord<>(
-                "anyTopic",
-                0,
-                0,
-                recordTimestamp,
-                TimestampType.CREATE_TIME,
-                0,
-                0,
-                null,
-                null,
-                new RecordHeaders(),
-                Optional.empty()),
-            partitionTime);
+        final long timestamp = extractor.extract(new ConsumerRecord<>("anyTopic", 0, 0, null, null), 42);
         final long after = System.currentTimeMillis();
 
         assertTrue(before <= timestamp);
